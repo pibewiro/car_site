@@ -6,7 +6,7 @@ import ViewUser from '../src/components/ViewUser'
 import Register from '../src/components/Register'
 import AddCar from '../src/components/AddCar'
 import ViewCars from '../src/components/ViewCars'
-
+import Favorite from '../src/components/Favorite'
 
 vue.use(VueRouter);
 
@@ -24,15 +24,24 @@ const routes = [{
     path: "/dashboard",
     component: Dashboard,
     children: [{
-      path: "/view_user",
-      component: ViewUser
-    }, {
-      path: "/add_car",
-      component: AddCar
-    }, {
-      path: "/view_cars",
-      component: ViewCars
-    }]
+        path: "/view_user",
+        component: ViewUser
+      }, {
+        path: "/add_car",
+        component: AddCar
+      }, {
+        path: "/view_cars",
+        component: ViewCars
+      },
+      {
+        path: "/my_cars",
+        component: ViewCars
+      },
+      {
+        path: "/favorites",
+        component: Favorite
+      }
+    ]
   }
 ]
 

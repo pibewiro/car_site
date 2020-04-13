@@ -12,24 +12,11 @@
           <router-link to="123">Home</router-link>
         </li>
 
-        <li
-          v-if="logoutLink"
-          class="logout-li"
-          @mouseover="logoutOp"
-          @mouseleave="logoutOp2"
-        >
-          <img
-            class="logout-img"
-            :src="image"
-          />
+        <li v-if="logoutLink" class="logout-li" @mouseover="logoutOp" @mouseleave="logoutOp2">
+          <img class="logout-img" :src="image" />
         </li>
       </ul>
-      <div
-        class="logout-div"
-        :style="logoutMenu"
-        @mouseover="logoutOp"
-        @mouseleave="logoutOp2"
-      >
+      <div class="logout-div" :style="logoutMenu" @mouseover="logoutOp" @mouseleave="logoutOp2">
         <p @click="logoutUser">LogOut</p>
       </div>
     </div>
@@ -37,51 +24,51 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from "vuex";
 export default {
-  name: 'Navbar',
+  name: "Navbar",
 
   data() {
     return {
       logoutLink: false,
       userAuth: null,
       image: null,
-      logoutMenu: 'display:none',
+      logoutMenu: "display:none",
       menuin: false,
     };
   },
 
   computed: {
-    ...mapState('user', ['user']),
+    ...mapState("user", ["user"]),
   },
 
   methods: {
-    ...mapActions('auth', ['logout']),
-    ...mapActions('user', ['getUser']),
+    ...mapActions("auth", ["logout"]),
+    ...mapActions("user", ["getUser"]),
 
     logoutOp() {
-      this.logoutMenu = 'display:block';
+      this.logoutMenu = "display:block";
     },
 
     logoutOp2() {
-      this.logoutMenu = 'display:none';
+      this.logoutMenu = "display:none";
     },
 
     logoutUser() {
       const obj = {
-        token: JSON.parse(localStorage.getItem('user')).token,
+        token: JSON.parse(localStorage.getItem("user")).token,
       };
 
       this.logout(obj);
-      localStorage.removeItem('user');
-      this.$router.push('/');
+      localStorage.removeItem("user");
+      this.$router.push("/");
     },
   },
 
   async created() {
-    this.userAuth = JSON.parse(localStorage.getItem('user'));
+    this.userAuth = JSON.parse(localStorage.getItem("user"));
 
-    if (localStorage.getItem('user') !== null) {
+    if (localStorage.getItem("user") !== null) {
       this.logoutLink = true;
     }
 

@@ -1,32 +1,23 @@
 <template>
   <div class="menu">
     <div class="menu-item">
-      <router-link
-        class="menu-list"
-        to="/view_cars"
-      >
+      <a class="menu-list" @click="reloadPage">
         <span class="menu-icon">
           <i class="fas fa-car-side"></i>
         </span>
         <p>View Cars</p>
-      </router-link>
+      </a>
 
-      <router-link
-        class="menu-list"
-        to="/view_cars"
-      >
+      <a class="menu-list" @click="reloadPage">
         <span class="menu-icon">
           <i class="fas fa-car-side"></i>
         </span>
         <p>My Cars</p>
-      </router-link>
+      </a>
     </div>
 
     <div class="menu-item">
-      <router-link
-        class="menu-list"
-        to="/add_car"
-      >
+      <router-link class="menu-list" to="/add_car">
         <span class="menu-icon">
           <i class="fas fa-car"></i>
         </span>
@@ -35,10 +26,7 @@
     </div>
 
     <div class="menu-item">
-      <router-link
-        class="menu-list"
-        to="/view_user"
-      >
+      <router-link class="menu-list" to="/view_user">
         <span class="menu-icon">
           <i class="fas fa-user"></i>
         </span>
@@ -47,10 +35,7 @@
     </div>
 
     <div class="menu-item">
-      <router-link
-        class="menu-list"
-        to="/view_user"
-      >
+      <router-link class="menu-list" to="/favorites">
         <span class="menu-icon">
           <i class="fas fa-user"></i>
         </span>
@@ -61,15 +46,45 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
-  name: 'Menu',
+  name: "Menu",
+
+  data: () => {
+    return {
+      userAuth: null,
+    };
+  },
+
+  methods: {
+    ...mapActions("car", ["getCars", "getUserCars"]),
+
+    async reloadPage() {
+      if (this.$route.path === "/view_cars") {
+        const obj = {
+          id: this.userAuth.data.id,
+          token: this.userAuth.token,
+        };
+        await this.getUserCars(obj);
+        this.$router.push("/my_cars");
+      } else {
+        const obj = {
+          limit: 10,
+          page: 1,
+        };
+        await this.getCars(obj);
+        this.$router.push("/view_cars");
+      }
+    },
+  },
+
+  created() {
+    this.userAuth = JSON.parse(localStorage.getItem("user"));
+  },
 };
 </script>
 
 <style scoped>
-.myc {
-  background: chocolate;
-}
 .menu {
   width: 12%;
   background: var(--primaryColor);
@@ -94,6 +109,7 @@ a:hover {
   background-color: var(--hoverColor);
   color: var(--siteText);
   text-decoration: none;
+  cursor: pointer;
 }
 
 .menu-list p {

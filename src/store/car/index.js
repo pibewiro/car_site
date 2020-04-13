@@ -1,7 +1,7 @@
 import axios from 'axios';
 const state = {
   cars: null,
-  total: null
+  total: null,
 };
 const mutations = {
   GET_CAR(state, payload) {
@@ -16,13 +16,10 @@ const actions = {
     commit
   }, obj) {
     const response = await axios.get(`${process.env.VUE_APP_API_ROOT}/car`, {
-      headers: {
-        'x-access-token': obj.token
-      },
 
       params: {
-        page: obj.page,
-        limit: 10
+        page: obj.page === null ? null : obj.page,
+        limit: obj.limit
       }
     })
     commit('GET_CAR', response.data)
@@ -54,7 +51,19 @@ const actions = {
     })
 
     commit('')
-  }
+  },
+
+  async getUserCars({
+    commit
+  }, obj) {
+    const response = await axios.get(`${process.env.VUE_APP_API_ROOT}/car/user/${obj.id}`, {
+
+      headers: {
+        'x-access-token': obj.token
+      },
+    })
+    commit('GET_CAR', response.data)
+  },
 };
 
 export default {

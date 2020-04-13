@@ -3,10 +3,9 @@
     <div v-if="loading" class="loading">
       <p>Loading...</p>
     </div>
-
     <div v-if="!loading">
-      <h1 v-if="$route.path === '/my_cars'">My Cars</h1>
-      <h1 v-if="$route.path === '/view_cars'">View Cars</h1>
+      <h1>Favorites</h1>
+
       <div v-for="(car, i) in cars" :key="i" class="cars">
         <div class="car-slider">
           <img :src="`${imageUrl}/images/${car.imageUrl[0]}`" />
@@ -22,12 +21,9 @@
           <h5>{{ car.user.firstname }} {{ car.user.lastname }}</h5>
           <h5>{{ car.user.address.city }}, {{ car.user.address.state }}</h5>
           <small>Uploaded {{ dateFormat(car.createdAt) }}</small>
-          <p>{{ car._id }}</p>
           <div class="btn-div">
             <button class="mr-3">View</button>
-            <button v-if="ids.includes(car._id)" @click="unfavClick(car._id)">Unfavorite</button>
-            <button v-if="!ids.includes(car._id)" @click="favClick(car._id)">Favorite</button>
-            <button v-if="$route.path === '/my_cars'">Edit</button>
+            <button @click="deleteFav(car._id)">Delete</button>
           </div>
         </div>
       </div>
@@ -44,6 +40,7 @@
         :page-class="'page-item'"
       ></paginate>
     </div>
+    <h1 v-if="cars === null || cars.length === 0">No Cars Availible</h1>
   </div>
 </template>
 
@@ -54,7 +51,7 @@ import en from "date-fns/locale/en-US";
 import Paginate from "vuejs-paginate";
 import CarImageModal from "./CarImageModal";
 export default {
-  name: "ViewCars",
+  name: "Favorite",
 
   components: {
     Paginate,
@@ -68,18 +65,28 @@ export default {
       loading: false,
       currentPage: 1,
       userAuth: null,
-      ids: ["1"],
+      cars: null,
     };
   },
 
   computed: {
-    ...mapState("car", ["cars", "total"]),
-    ...mapState("favorite", ["favorites", "favIds"]),
+    ...mapState("favorite", ["favorites", "total"]),
   },
 
   methods: {
-    ...mapActions("car", ["getCars", "getUserCars"]),
-    ...mapActions("favorite", ["addFavorites", "getFavorites", "deleteFavorites"]),
+    ...mapActions("favorite", ["getFavorites", "deleteFavorites"]),
+
+    async deleteFav(id) {
+      const obj = {
+        data: {
+          favId: id,
+          userId: this.userAuth.data.id,
+        },
+      };
+      await this.deleteFavorites(obj);
+      await this.getFavorites({ userId: this.userAuth.data.id });
+      this.cars = this.favorites;
+    },
 
     async changePage() {
       window.scrollTo(0, 0);
@@ -98,69 +105,13 @@ export default {
       });
       return date;
     },
-
-    async favClick(id) {
-      const obj = {
-        data: {
-          favoriteIds: id,
-          userId: this.userAuth.data.id,
-        },
-        token: this.userAuth.token,
-      };
-      await this.addFavorites(obj);
-      if (this.favIds !== undefined) {
-        this.ids = [...this.favIds];
-      }
-    },
-
-    async unfavClick(id) {
-      const obj = {
-        data: {
-          favId: id,
-          userId: this.userAuth.data.id,
-        },
-        token: this.userAuth.token,
-      };
-
-      await this.deleteFavorites(obj);
-      if (this.favIds !== undefined) {
-        this.ids = [...this.favIds];
-      }
-    },
   },
 
-  async created() {
-    window.scrollTo(0, 0);
-
+  async mounted() {
     this.userAuth = JSON.parse(localStorage.getItem("user"));
-
-    if (this.$route.path === "/view_cars") {
-      this.loading = true;
-
-      await this.getFavorites({ userId: this.userAuth.data.id });
-
-      await this.getCars({
-        page: 1,
-        limit: 10,
-      });
-
-      // this.ids = this.favIds;
-      if (this.favIds !== undefined) {
-        this.ids = [...this.favIds];
-      }
-
-      this.loading = false;
-      this.imageUrl = `${process.env.VUE_APP_API_ROOT2}`;
-    } else {
-      this.loading = true;
-      const obj = {
-        id: JSON.parse(localStorage.getItem("user")).data.id,
-        token: JSON.parse(localStorage.getItem("user")).token,
-      };
-      await this.getUserCars(obj);
-      this.loading = false;
-      this.imageUrl = `${process.env.VUE_APP_API_ROOT2}`;
-    }
+    await this.getFavorites({ userId: this.userAuth.data.id });
+    this.imageUrl = process.env.VUE_APP_API_ROOT2;
+    this.cars = this.favorites;
   },
 };
 </script>
@@ -191,11 +142,11 @@ img {
 }
 
 .hoverDiv {
-  width: 39%;
+  width: 39.2%;
   height: 347.5px;
   background: transparent;
   position: absolute;
-  left: 173px;
+  left: 172px;
   display: block;
 }
 
