@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "node server.js",
     "serve": "vue-cli-service serve",
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -15,6 +16,7 @@
     "bootstrap-vue": "^2.10.0",
     "core-js": "^3.6.4",
     "date-fns": "^2.11.1",
+    "express": "^4.17.1",
     "firebase": "^7.14.0",
     "swal": "^0.1.0",
     "sweetalert": "^2.1.2",

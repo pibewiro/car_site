@@ -7,6 +7,8 @@ import Register from '../src/components/Register'
 import AddCar from '../src/components/AddCar'
 import ViewCars from '../src/components/ViewCars'
 import Favorite from '../src/components/Favorite'
+import ForgotPassword from '../src/components/ForgotPassword'
+import PasswordRecovery from '../src/components/PasswordRecovery'
 
 vue.use(VueRouter);
 
@@ -18,6 +20,16 @@ const routes = [{
   {
     path: '/register',
     component: Register
+  },
+
+  {
+    path: '/forgot-password',
+    component: ForgotPassword
+  },
+
+  {
+    path: '/password-recovery',
+    component: PasswordRecovery
   },
 
   {

@@ -6,21 +6,31 @@
         <p class="error">{{ this.error.invalid }}</p>
         <div class="form-group">
           <label for="email">Email</label>
-          <input type="text" v-model="email" />
+          <input
+            type="text"
+            v-model="email"
+          />
           <p class="error">{{ this.error.email }}</p>
         </div>
 
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" v-model="password" />
+          <input
+            type="password"
+            v-model="password"
+          />
           <p class="error">{{ this.error.password }}</p>
         </div>
 
-        <div class="btn-div">
+        <div
+          class="btn-div"
+          style="margin-bottom:10px;"
+        >
           <button @click="signIn">Sign In</button>
         </div>
 
         <router-link to="/register">Not Signed up...Register</router-link>
+        <router-link to="/forgot-password">Forgot Password</router-link>
       </div>
 
       <Footer />
@@ -29,9 +39,9 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import { mapActions, mapState } from 'vuex';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 export default {
   components: {
@@ -52,11 +62,11 @@ export default {
   },
 
   computed: {
-    ...mapState("auth", ["user"]),
+    ...mapState('auth', ['user']),
   },
 
   methods: {
-    ...mapActions("auth", ["login"]),
+    ...mapActions('auth', ['login']),
 
     async signIn() {
       const obj = {
@@ -66,8 +76,8 @@ export default {
 
       try {
         await this.login(obj);
-        this.$router.push("/view_cars");
-        localStorage.setItem("user", JSON.stringify(this.user));
+        this.$router.push('/view_cars');
+        localStorage.setItem('user', JSON.stringify(this.user));
       } catch (err) {
         this.error = err.response.data;
       }
@@ -75,8 +85,8 @@ export default {
   },
 
   created() {
-    if (localStorage.getItem("user") !== null) {
-      this.$router.push("/view_cars");
+    if (localStorage.getItem('user') !== null) {
+      this.$router.push('/view_cars');
     }
   },
 };
@@ -93,8 +103,8 @@ export default {
 }
 
 .home-div:before {
-  content: "";
-  background: url("../assets/homepic.jpg") center center/cover;
+  content: '';
+  background: url('../assets/homepic.jpg') center center/cover;
   position: absolute;
   top: 0;
   left: 0;
@@ -131,7 +141,7 @@ export default {
 
 .form-div a {
   text-align: center;
-  margin-top: 20px;
+  margin-bottom: 10px;
   color: darkcyan;
   display: block;
   text-decoration: none;
