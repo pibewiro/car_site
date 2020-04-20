@@ -9,7 +9,7 @@
 
     <div v-if="!loading">
       <h1 v-if="$route.path === '/my_cars'">My Cars</h1>
-      <h1 v-if="$route.path === '/view_cars'">View Cars</h1>
+      <h1 v-if="$route.path === '/view_cars'">View Whips</h1>
       <div
         v-for="(car, i) in cars"
         :key="i"
