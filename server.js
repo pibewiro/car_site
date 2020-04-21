@@ -3,8 +3,7 @@ const path = require("path");
 
 const app = express();
 
-app.use("/", express.static(path.join(__dirname, 'dist')));
-app.use("/dist", express.static(path.join(__dirname, 'css')));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 let port = process.env.PORT || 8080;
 app.listen(port);
