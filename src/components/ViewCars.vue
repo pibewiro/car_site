@@ -1,32 +1,19 @@
 <template>
   <div class="view-cars">
-    <div
-      v-if="loading"
-      class="loading"
-    >
+    <div v-if="loading" class="loading">
       <p>Loading...</p>
     </div>
 
     <div v-if="!loading">
       <h1 v-if="$route.path === '/my_cars'">My Whips</h1>
       <h1 v-if="$route.path === '/view_cars'">View Whips</h1>
-      <div
-        v-for="(car, i) in cars"
-        :key="i"
-        class="cars"
-      >
+      <div v-for="(car, i) in cars" :key="i" class="cars">
         <div class="car-slider">
           <img :src="`${imageUrl}/images/${car.imageUrl[0]}`" />
         </div>
 
-        <div
-          class="hoverDiv"
-          v-b-modal="`carpics${car._id}`"
-        ></div>
-        <CarImageModal
-          :id="car._id"
-          :carInfo="car"
-        />
+        <div class="hoverDiv" v-b-modal="`carpics${car._id}`"></div>
+        <CarImageModal :id="car._id" :carInfo="car" />
 
         <div class="user-info">
           <h3>{{ car.make }} {{ car.model }}</h3>
@@ -37,18 +24,10 @@
           <small>Uploaded {{ dateFormat(car.createdAt) }}</small>
           <p>{{ car._id }}</p>
           <div class="btn-div">
-            <div
-              v-if="ids.includes(car._id)"
-              @click="unfavClick(car._id)"
-              class="star-yellow"
-            >
+            <div v-if="ids.includes(car._id)" @click="unfavClick(car._id)" class="star-yellow">
               <i class="far fa-star"></i>
             </div>
-            <div
-              v-if="!ids.includes(car._id)"
-              @click="favClick(car._id)"
-              class="star-white"
-            >
+            <div v-if="!ids.includes(car._id)" @click="favClick(car._id)" class="star-white">
               <i class="far fa-star"></i>
             </div>
             <button v-if="$route.path === '/my_cars'">Edit</button>
@@ -56,10 +35,7 @@
         </div>
       </div>
     </div>
-    <div
-      v-if="$route.path === '/view_cars'"
-      class="pagination-area-ih1"
-    >
+    <div v-if="$route.path === '/view_cars'" class="pagination-area-ih1">
       <paginate
         v-model="currentPage"
         :pageCount="Math.ceil(this.total / 7)"
@@ -75,15 +51,14 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
-import { format } from 'date-fns';
-import en from 'date-fns/locale/en-US';
-import Paginate from 'vuejs-paginate';
-import CarImageModal from './CarImageModal';
-import urls from './enviroment';
+import { mapActions, mapState } from "vuex";
+import { format } from "date-fns";
+import en from "date-fns/locale/en-US";
+import Paginate from "vuejs-paginate";
+import CarImageModal from "./CarImageModal";
 
 export default {
-  name: 'ViewCars',
+  name: "ViewCars",
 
   components: {
     Paginate,
@@ -97,22 +72,18 @@ export default {
       loading: false,
       currentPage: 1,
       userAuth: null,
-      ids: ['1'],
+      ids: ["1"],
     };
   },
 
   computed: {
-    ...mapState('car', ['cars', 'total']),
-    ...mapState('favorite', ['favorites', 'favIds']),
+    ...mapState("car", ["cars", "total"]),
+    ...mapState("favorite", ["favorites", "favIds"]),
   },
 
   methods: {
-    ...mapActions('car', ['getCars', 'getUserCars']),
-    ...mapActions('favorite', [
-      'addFavorites',
-      'getFavorites',
-      'deleteFavorites',
-    ]),
+    ...mapActions("car", ["getCars", "getUserCars"]),
+    ...mapActions("favorite", ["addFavorites", "getFavorites", "deleteFavorites"]),
 
     async changePage() {
       window.scrollTo(0, 0);
@@ -126,7 +97,7 @@ export default {
     },
 
     dateFormat(param) {
-      const date = format(new Date(param), 'MM/dd/yyyy H:mm a', {
+      const date = format(new Date(param), "MM/dd/yyyy H:mm a", {
         locale: en,
       });
       return date;
@@ -166,9 +137,9 @@ export default {
     console.log(process.env);
     window.scrollTo(0, 0);
 
-    this.userAuth = JSON.parse(localStorage.getItem('user'));
+    this.userAuth = JSON.parse(localStorage.getItem("user"));
 
-    if (this.$route.path === '/view_cars') {
+    if (this.$route.path === "/view_cars") {
       this.loading = true;
 
       await this.getFavorites({ userId: this.userAuth.data.id });
@@ -188,12 +159,12 @@ export default {
     } else {
       this.loading = true;
       const obj = {
-        id: JSON.parse(localStorage.getItem('user')).data.id,
-        token: JSON.parse(localStorage.getItem('user')).token,
+        id: JSON.parse(localStorage.getItem("user")).data.id,
+        token: JSON.parse(localStorage.getItem("user")).token,
       };
       await this.getUserCars(obj);
       this.loading = false;
-      this.imageUrl = `${urls.url2}`;
+      this.imageUrl = `${process.env.VUE_APP_API_ROOT2}`;
     }
   },
 };
